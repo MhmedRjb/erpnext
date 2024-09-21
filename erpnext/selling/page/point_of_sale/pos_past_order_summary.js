@@ -29,6 +29,7 @@ erpnext.PointOfSale.PastOrderSummary = class {
 						<div class="label">${__("Payments")}</div>
 						<div class="payments-container summary-container"></div>
 						<div class="summary-btns"></div>
+						
 					</div>
 				</div>
 			</section>`
@@ -184,6 +185,20 @@ erpnext.PointOfSale.PastOrderSummary = class {
 			this.show_summary_placeholder();
 		});
 
+		this.$summary_container.on("click", ".pay-btn", () => {
+			// this.events.pay(this.doc.name);
+			//TAKE THE VALUE IN 
+			const newFieldValue = this.$summary_container.find("#new-field").val();
+    
+			// Display the value using frappe.msgprint
+			frappe.msgprint(`Entered value: ${newFieldValue}`);
+					this.toggle_component(false);
+			this.$component.find(".no-summary-placeholder").css("display", "flex");
+			this.$summary_wrapper.css("display", "none");
+		});
+
+
+
 		this.$summary_container.on("click", ".delete-btn", () => {
 			this.events.delete_order(this.doc.name);
 			this.show_summary_placeholder();
@@ -207,6 +222,17 @@ erpnext.PointOfSale.PastOrderSummary = class {
 		this.$summary_container.on("click", ".print-btn", () => {
 			this.print_receipt();
 		});
+
+
+		const newFieldHtml = `
+			<div class="new-field-container">
+				<label for="new-field">${__("New Field Label")}</label>
+				<input type="int" id="new-field" class="form-control" placeholder="${__("Enter value")}">
+			</div>
+						`;
+
+		this.$summary_container.append(newFieldHtml);
+
 	}
 
 	print_receipt() {
@@ -320,10 +346,10 @@ erpnext.PointOfSale.PastOrderSummary = class {
 
 	get_condition_btn_map(after_submission) {
 		if (after_submission)
-			return [{ condition: true, visible_btns: ["Print Receipt", "Email Receipt", "New Order"] }];
+			return [{ condition: true, visible_btns: ["Print Receipt", "Email Receipt", "New Order","pay"] }];
 
 		return [
-			{ condition: this.doc.docstatus === 0, visible_btns: ["Edit Order", "Delete Order"] },
+			{ condition: this.doc.docstatus === 0, visible_btns: ["Edit Order", "Delete Order","pay"] },
 			{
 				condition: !this.doc.is_return && this.doc.docstatus === 1,
 				visible_btns: ["Print Receipt", "Email Receipt", "Return"],
