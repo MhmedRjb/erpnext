@@ -186,13 +186,26 @@ erpnext.PointOfSale.PastOrderSummary = class {
 		});
 
 		this.$summary_container.on("click", ".pay-btn", () => {
-			// this.events.pay(this.doc.name);
-			//TAKE THE VALUE IN 
 			const newFieldValue = this.$summary_container.find("#new-field").val();
-    
-			// Display the value using frappe.msgprint
-			frappe.msgprint(`Entered value: ${newFieldValue}`);
-					this.toggle_component(false);
+			console.log(this.doc);
+			frappe.show_alert(`Entered value: ${newFieldValue}, Invoice name: ${this.doc.name}`);
+
+
+			frappe.call({
+				method: "frappe.client.get_value",
+				args: {
+					doctype: "POS Invoice",
+					fieldname: ["customer_name"],
+					filters: { name: this.doc.name }
+				},
+				callback: (r) => {
+					if (r.message) {
+						frappe.show_alert(`Customerccccccccc Name: ${r.message.customer_name}`);
+					}
+				}
+			});
+		
+			this.toggle_component(false);
 			this.$component.find(".no-summary-placeholder").css("display", "flex");
 			this.$summary_wrapper.css("display", "none");
 		});

@@ -186,6 +186,7 @@ class POSInvoice(SalesInvoice):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
+
 	def validate(self):
 		if not cint(self.is_pos):
 			frappe.throw(
